@@ -14,13 +14,5 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname == `/login`) {
-    const token = await getToken({ req });
-    if (token) {
-      const url = new URL("/", req.url);
-      return NextResponse.redirect(url);
-    }
-  }
-
   return res;
 }
