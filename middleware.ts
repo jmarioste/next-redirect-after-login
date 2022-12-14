@@ -2,19 +2,19 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-  const protectedPaths = ["/"];
+  const protectedPaths = ["/", "/admin"];
   const isPathProtected = protectedPaths?.some((path) => pathname == path);
   const res = NextResponse.next();
   if (isPathProtected) {
     const token = await getToken({ req });
     if (!token) {
-      const url = new URL(`/api/auth/signin`, req.url);
-      url.searchParams.set("callbackUrl", encodeURI(req.url));
+      const url = new URL(`/login`, req.url);
+      url.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(url);
     }
   }
 
-  if (pathname == `/api/auth/signin`) {
+  if (pathname == `/login`) {
     const token = await getToken({ req });
     if (token) {
       const url = new URL("/", req.url);
